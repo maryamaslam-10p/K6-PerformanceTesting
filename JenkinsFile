@@ -38,7 +38,7 @@ pipeline {
                 publishHTML(target: [
                     allowMissing: false,
                     keepAll: true,
-                    reportDir: 'tests',
+                    reportDir: 'reports',
                     reportFiles: 'report.html',
                     reportName: 'k6 Performance Report'
                 ])
