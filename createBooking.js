@@ -1,6 +1,9 @@
 import http from "k6/http";
 import { check } from "k6";
-import { BASE_URL } from "./config.js";
+// import { BASE_URL } from "./config.js";
+
+// Read credentials and URL from environment variables
+const BASE_URL = __ENV.BASE_URL;
 
 export function createBooking() {
   const payload = {
@@ -27,7 +30,7 @@ export function createBooking() {
   });
 
   const bookingId = result.json("bookingid");
-  console.log(`Created booking ${bookingId}`);
+  //console.log(`Created booking ${bookingId}`);
   return bookingId;
 
 

@@ -1,6 +1,9 @@
 import http from "k6/http";
 import { check } from "k6";
-import { BASE_URL } from "./config.js";
+//import { BASE_URL } from "./config.js";
+
+// Read credentials and URL from environment variables
+const BASE_URL = __ENV.BASE_URL;
 
 export function updateBooking(bookingId, token) {
   const payload = {
@@ -24,7 +27,7 @@ export function updateBooking(bookingId, token) {
   });
 
   console.log(`Update Status: ${res.status}`);
- //   console.log(`Update Body: ${res.body}`);
+ console.log(`Update Body: ${res.body}`);
 
   check(res, {
     "update status 200": (r) => r.status === 200,
@@ -33,6 +36,6 @@ export function updateBooking(bookingId, token) {
   });
 
 
- // console.log(`Booking updated`);
+ console.log(`Booking updated`);
   return res;
 }

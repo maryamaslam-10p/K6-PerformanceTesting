@@ -1,6 +1,9 @@
 import http from "k6/http";
 import { check } from "k6";
-import { BASE_URL } from "./config.js";
+//import { BASE_URL } from "./config.js";
+
+// Read credentials and URL from environment variables
+const BASE_URL = __ENV.BASE_URL;
 
 //Normal booking fetch (for verification before update/delete)
 export function getBooking(bookingId) {
@@ -21,7 +24,7 @@ export function getBooking(bookingId) {
 export function verifyBookingDeleted(bookingId) {
   const res = http.get(`${BASE_URL}/booking/${bookingId}`, {
     headers: { Accept: "application/json" },
-    tags: { expected_error: true }, // 👈 Tag so it won’t count as a failed req
+    tags: { expected_error: true }, //  Tag so it won’t count as a failed req
   });
 
   check(res, {
