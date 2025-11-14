@@ -2,9 +2,7 @@ pipeline {
     agent any
 
     environment {
-        BASE_URL = "https://restful-booker.herokuapp.com"
-        USERNAME = credentials('k6-username')
-        PASSWORD = credentials('k6-password')
+        // K6 web dashboard settings
         K6_WEB_DASHBOARD = "true"
         K6_WEB_DASHBOARD_EXPORT = "report.html"
     }
@@ -17,12 +15,21 @@ pipeline {
             }
         }
 
-        stage('Run k6 Test') {
+        stage('Set Credentials & Run k6 Test') {
             steps {
-                bat """
-                    cd tests
-                    k6 run main.js
-                """
+                // Use Jenkins credentials as environment variables
+                withCredentials([
+                    string(credentialsId: 'BASE_URL', variable: 'BASE_URL'),
+                    usernamePassword(credentialsId: 'API_USER', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')
+                ]) {
+                    bat """
+                        cd tests
+                        echo BASE_URL=%BASE_URL%
+                        echo USERNAME=%USERNAME%
+                        echo PASSWORD=%PASSWORD%
+                        k6 run main.js
+                    """
+                }
             }
         }
 
