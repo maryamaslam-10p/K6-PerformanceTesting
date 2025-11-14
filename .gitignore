@@ -1,0 +1,5 @@
+config.js
+
+# Reports
+*.html
+*.json

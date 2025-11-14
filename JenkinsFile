@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    environment {
+        BASE_URL = "https://restful-booker.herokuapp.com"
+        USERNAME = credentials('k6-username')
+        PASSWORD = credentials('k6-password')
+        K6_WEB_DASHBOARD = "true"
+        K6_WEB_DASHBOARD_EXPORT = "report.html"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/maryamaslam-10p/K6-PerformanceTesting'
+            }
+        }
+
+        stage('Run k6 Test') {
+            steps {
+                bat """
+                    cd tests
+                    k6 run main.js
+                """
+            }
+        }
+
+        stage('Publish Report') {
+            steps {
+                publishHTML(target: [
+                    allowMissing: false,
+                    keepAll: true,
+                    reportDir: 'tests',
+                    reportFiles: 'report.html',
+                    reportName: 'k6 Performance Report'
+                ])
+            }
+        }
+    }
+}
