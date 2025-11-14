@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        // K6 web dashboard settings
+        // Automatically generate HTML report in workspace root
         K6_WEB_DASHBOARD = "true"
         K6_WEB_DASHBOARD_EXPORT = "report.html"
     }
@@ -17,16 +17,17 @@ pipeline {
 
         stage('Set Credentials & Run k6 Test') {
             steps {
-                // Use Jenkins credentials as environment variables
                 withCredentials([
                     string(credentialsId: 'BASE_URL', variable: 'BASE_URL'),
                     usernamePassword(credentialsId: 'API_USER', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')
                 ]) {
                     bat """
-                        cd tests
+                        REM Print environment variables for debugging
                         echo BASE_URL=%BASE_URL%
                         echo USERNAME=%USERNAME%
                         echo PASSWORD=%PASSWORD%
+
+                        REM Run k6; HTML report will be automatically exported to 'report.html'
                         k6 run main.js
                     """
                 }
@@ -38,11 +39,17 @@ pipeline {
                 publishHTML(target: [
                     allowMissing: false,
                     keepAll: true,
-                    reportDir: 'reports',
-                    reportFiles: 'report.html',
+                    reportDir: '.',        // workspace root
+                    reportFiles: 'report.html', 
                     reportName: 'k6 Performance Report'
                 ])
             }
+        }
+    }
+
+    post {
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }
