@@ -15,7 +15,7 @@ pipeline {
             }
         }
 
-        stage('Set Credentials & Run k6 Test') {
+        stage('Set Credentials & Create config.js') {
             steps {
                 withCredentials([
                     string(credentialsId: 'BASE_URL', variable: 'BASE_URL'),
@@ -27,7 +27,15 @@ pipeline {
                         echo USERNAME=%USERNAME%
                         echo PASSWORD=%PASSWORD%
 
-                        REM Run k6; HTML report will be automatically exported to 'report.html'
+                        REM Dynamically create config.js for K6 tests
+                        echo export const BASE_URL = "%BASE_URL%"; > config.js
+                        echo export const USERNAME = "%USERNAME%"; >> config.js
+                        echo export const PASSWORD = "%PASSWORD%"; >> config.js
+
+                        REM Verify config.js creation
+                        type config.js
+
+                        REM Run K6 tests; HTML report will be exported to 'report.html'
                         k6 run main.js
                     """
                 }

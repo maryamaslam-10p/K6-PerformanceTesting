@@ -1,12 +1,14 @@
 import http from "k6/http";
 import { check } from "k6";
-
-// Read credentials and URL from environment variables
-const BASE_URL = __ENV.BASE_URL;
-const USERNAME = __ENV.USERNAME;
-const PASSWORD = __ENV.PASSWORD;
+import { BASE_URL, USERNAME, PASSWORD } from "./config.js"; // import from config.js
 
 export function auth() {
+    // Safety check to avoid undefined values
+    if (!BASE_URL || !USERNAME || !PASSWORD) {
+        console.error("❌ Missing config values. Make sure config.js exists or env variables are set.");
+        throw new Error("Config values undefined");
+    }
+
     const payload = {
         username: USERNAME,
         password: PASSWORD,
@@ -22,6 +24,6 @@ export function auth() {
     });
 
     const token = result.json("token");
-    // console.log(`Token: ${token}`);
+    // Optional: console.log(`Token: ${token}`);
     return token;
 }

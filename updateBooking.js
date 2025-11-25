@@ -1,9 +1,9 @@
 import http from "k6/http";
 import { check } from "k6";
-//import { BASE_URL } from "./config.js";
+import { BASE_URL } from "./config.js";
 
 // Read credentials and URL from environment variables
-const BASE_URL = __ENV.BASE_URL;
+//const BASE_URL = __ENV.BASE_URL;
 
 export function updateBooking(bookingId, token) {
   const payload = {
