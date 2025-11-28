@@ -2,9 +2,6 @@ import http from "k6/http";
 import { check } from "k6";
 import { BASE_URL } from "./config.js";
 
-// Read credentials and URL from environment variables
-//const BASE_URL = __ENV.BASE_URL;
-
 export function deleteBooking(bookingId, token) {
   const res = http.del(`${BASE_URL}/booking/${bookingId}`, null, {
     headers: {

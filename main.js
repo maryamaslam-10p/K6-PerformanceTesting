@@ -16,12 +16,9 @@ export const options = {
     ],
 
     //ignore expected 404s (from verifyBookingDeleted)
-    "http_req_failed{expected_error:false}": ["rate<0.01"],
-
-    
+    "http_req_failed{expected_error:false}": ["rate<0.01"],    
   },
 };
-
 export default function () {
   console.log("Test iteration started");
 

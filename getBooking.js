@@ -2,10 +2,7 @@ import http from "k6/http";
 import { check } from "k6";
 import { BASE_URL } from "./config.js";
 
-// Read credentials and URL from environment variables
-//const BASE_URL = __ENV.BASE_URL;
-
-//Normal booking fetch (for verification before update/delete)
+//Normal booking fetch (for verification)
 export function getBooking(bookingId) {
   const res = http.get(`${BASE_URL}/booking/${bookingId}`, {
     headers: { Accept: "application/json" },
